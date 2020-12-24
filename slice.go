@@ -42,3 +42,29 @@ func IntSliceMin(s []int) int {
 	sort.Ints(s)
 	return s[0]
 }
+
+// IntMatrixTranspose returns a 2d slice such that input[r][c] = output[c][r].
+// It expects a non-nil, non-empty 2d slice where each row has the same length.
+func IntMatrixTranspose(m [][]int) [][]int {
+	if len(m) == 0 || m == nil {
+		return nil
+	}
+
+	rowLen := len(m[0])
+	for _, row := range m {
+		if len(row) != rowLen {
+			return m
+		}
+	}
+
+	var ret [][]int
+	for i := 0; i < len(m[0]); i++ {
+		var r []int
+		for _, entry := range m {
+			r = append(r, entry[i])
+		}
+		ret = append(ret, r)
+	}
+
+	return ret
+}

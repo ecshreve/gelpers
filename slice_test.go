@@ -144,3 +144,69 @@ func ExampleIntSliceMin() {
 	fmt.Println(gelpers.IntSliceMin(s))
 	// Output: 1
 }
+
+func TestIntMatrixTranspose(t *testing.T) {
+	testcases := []struct {
+		desc     string
+		inp      [][]int
+		expected [][]int
+	}{
+		{
+			desc: "simple square matrix",
+			inp: [][]int{
+				{1, 2},
+				{1, 2},
+			},
+			expected: [][]int{
+				{1, 1},
+				{2, 2},
+			},
+		},
+		{
+			desc: "simple not square matrix",
+			inp: [][]int{
+				{1, 2, 3},
+				{1, 2, 3},
+			},
+			expected: [][]int{
+				{1, 1},
+				{2, 2},
+				{3, 3},
+			},
+		},
+		{
+			desc: "matrix with different row lengths",
+			inp: [][]int{
+				{1, 2, 3},
+				{1, 2},
+			},
+			expected: [][]int{
+				{1, 2, 3},
+				{1, 2},
+			},
+		},
+		{
+			desc:     "empty matrix",
+			inp:      [][]int{},
+			expected: nil,
+		},
+		{
+			desc:     "nil matrix",
+			inp:      nil,
+			expected: nil,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.desc, func(t *testing.T) {
+			actual := gelpers.IntMatrixTranspose(testcase.inp)
+			assert.Equal(t, testcase.expected, actual)
+		})
+	}
+}
+
+func ExampleIntMatrixTranspose() {
+	m := [][]int{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}
+	fmt.Println(gelpers.IntMatrixTranspose(m))
+	// Output: [[1 1 1] [2 2 2] [3 3 3]]
+}
