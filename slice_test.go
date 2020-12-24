@@ -54,3 +54,93 @@ func ExampleIntSliceContains() {
 	fmt.Println(gelpers.IntSliceContains(s, 2))
 	// Output: true
 }
+
+func ExampleIntSliceSum() {
+	s := []int{1, 2, 3}
+	fmt.Println(gelpers.IntSliceSum(s))
+	// Output: 6
+}
+
+func TestIntSliceMax(t *testing.T) {
+	testcases := []struct {
+		desc     string
+		inp      []int
+		expected int
+	}{
+		{
+			desc:     "simple",
+			inp:      []int{1, 2, 3},
+			expected: 3,
+		},
+		{
+			desc:     "single item slice",
+			inp:      []int{1},
+			expected: 1,
+		},
+		{
+			desc:     "empty slice",
+			inp:      []int{},
+			expected: -1,
+		},
+		{
+			desc:     "nil slice",
+			inp:      nil,
+			expected: -1,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.desc, func(t *testing.T) {
+			actual := gelpers.IntSliceMax(testcase.inp)
+			assert.Equal(t, testcase.expected, actual)
+		})
+	}
+}
+
+func TestIntSliceMin(t *testing.T) {
+	testcases := []struct {
+		desc     string
+		inp      []int
+		expected int
+	}{
+		{
+			desc:     "simple",
+			inp:      []int{1, 2, 3},
+			expected: 1,
+		},
+		{
+			desc:     "single item slice",
+			inp:      []int{1},
+			expected: 1,
+		},
+		{
+			desc:     "empty slice",
+			inp:      []int{},
+			expected: -1,
+		},
+		{
+			desc:     "nil slice",
+			inp:      nil,
+			expected: -1,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.desc, func(t *testing.T) {
+			actual := gelpers.IntSliceMin(testcase.inp)
+			assert.Equal(t, testcase.expected, actual)
+		})
+	}
+}
+
+func ExampleIntSliceMax() {
+	s := []int{1, 2, 3}
+	fmt.Println(gelpers.IntSliceMax(s))
+	// Output: 3
+}
+
+func ExampleIntSliceMin() {
+	s := []int{1, 2, 3}
+	fmt.Println(gelpers.IntSliceMin(s))
+	// Output: 1
+}
