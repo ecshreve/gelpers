@@ -1,6 +1,8 @@
 package gelpers_test
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"testing"
 
@@ -50,8 +52,30 @@ func TestReadJSONFile(t *testing.T) {
 	}
 }
 
+func ExampleReadJSONFile() {
+	// The example JSON file contains the following:
+	//	{
+	//	  "data": {
+	//	    "outer_key": {
+	//	      "inner_key": {
+	//	        "v1": "here's a string",
+	//	        "v2": 123
+	//	       }
+	//	     }
+	//	   }
+	// 	}
+
+	dataMap, err := gelpers.ReadJSONFile("testdata/example.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Now we can do whatever you want with the data map.
+	fmt.Println(dataMap)
+	// Output: &map[data:map[outer_key:map[inner_key:map[v1:here's a string v2:123]]]]
+}
+
 func TestWriteCSVFile(t *testing.T) {
-	// This is a valid 2d slice of strings.
 	data := [][]string{
 		{"one", "two"},
 		{"one_one", "two_two"},
@@ -96,4 +120,23 @@ func TestWriteCSVFile(t *testing.T) {
 			}
 		})
 	}
+}
+
+func ExampleWriteCSVFile() {
+	data := [][]string{
+		{"one", "two"},
+		{"one_one", "two_two"},
+	}
+
+	outfilePath := "testdata/example.csv"
+	dataFile, err := gelpers.WriteCSVFile(data, &outfilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.Remove(dataFile.Name())
+
+	// Now we can do whatever we want with the output file.
+	fileInfo, _ := os.Stat(dataFile.Name())
+	fmt.Println(fileInfo.Size())
+	// Output: 24
 }

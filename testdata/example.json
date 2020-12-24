@@ -1,0 +1,10 @@
+{
+	"data": {
+		"outer_key": {
+			"inner_key": {
+				"v1": "here's a string",
+				"v2": 123
+			}
+		}
+	}
+}
