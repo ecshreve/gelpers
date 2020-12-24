@@ -19,3 +19,10 @@ func ExampleStringVal() {
 	fmt.Printf("%T", sVal)
 	// Output: string
 }
+
+func ExampleStringVal_second() {
+	var sPtr *string
+	sVal := gelpers.StringVal(sPtr)
+	fmt.Println(sVal == "")
+	// Output: true
+}
