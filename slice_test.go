@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInIntSlice(t *testing.T) {
+func TestIntSliceContains(t *testing.T) {
 	testcases := []struct {
 		desc     string
 		inpSlice []int
@@ -43,14 +43,14 @@ func TestInIntSlice(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.desc, func(t *testing.T) {
-			actual := gelpers.InIntSlice(testcase.inpSlice, testcase.inpVal)
+			actual := gelpers.IntSliceContains(testcase.inpSlice, testcase.inpVal)
 			assert.Equal(t, testcase.expected, actual)
 		})
 	}
 }
 
-func ExampleInIntSlice() {
+func ExampleIntSliceContains() {
 	s := []int{1, 2, 3}
-	fmt.Println(gelpers.InIntSlice(s, 2))
+	fmt.Println(gelpers.IntSliceContains(s, 2))
 	// Output: true
 }
