@@ -1,6 +1,7 @@
 package gelpers_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/ecshreve/gelpers"
@@ -44,6 +45,54 @@ func TestReadJSONFile(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, rawData)
+			}
+		})
+	}
+}
+
+func TestWriteCSVFile(t *testing.T) {
+	// This is a valid 2d slice of strings.
+	data := [][]string{
+		{"one", "two"},
+		{"one_one", "two_two"},
+	}
+
+	testcases := []struct {
+		description string
+		outfilePath string
+		expectError bool
+	}{
+		{
+			description: "expect error for a bad file type",
+			outfilePath: "testdata/nonexistentdirectory/testoutput.xls",
+			expectError: true,
+		},
+		{
+			description: "expect error for a bad file path",
+			outfilePath: "testdata/nonexistentdirectory/testoutput.csv",
+			expectError: true,
+		},
+		{
+			description: "expect success for a good path",
+			outfilePath: "testdata/testoutput.csv",
+			expectError: false,
+		},
+		{
+			description: "expect success with no path provided",
+			outfilePath: "",
+			expectError: false,
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.description, func(t *testing.T) {
+			outfile, err := gelpers.WriteCSVFile(data, &testcase.outfilePath)
+			assert.Equal(t, testcase.expectError, err != nil)
+			assert.Equal(t, testcase.expectError, outfile == nil)
+
+			// Remove the CSV file if one was created.
+			if !testcase.expectError {
+				os.Remove(outfile.Name())
 			}
 		})
 	}

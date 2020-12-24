@@ -1,10 +1,13 @@
 package gelpers
 
 import (
+	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/samsarahq/go/oops"
 )
@@ -41,4 +44,50 @@ func ReadJSONFile(path string) (*map[string]interface{}, error) {
 	}
 
 	return &result, nil
+}
+
+// WriteCSVFile writes the given 2d slice of strings to a CSV file at the given
+// path and returns a pointer to the output file, or an error if unsuccessful.
+//
+// This function treats the first row in the data argument as the headers for
+// the CSV file.
+//
+// If no path is provided, then a default filename is generated for the output.
+// The default directory for the output file is the root directory of the
+// module. The filename is of the form `data_<ms_epoch>.output.csv`.
+//
+// If a path is provided it must be for a CSV file.
+func WriteCSVFile(data [][]string, path *string) (*os.File, error) {
+	var outfilePath *string
+	if path == nil || *path == "" {
+		timeNowMs := time.Now().Unix()
+		outfilePathVal := fmt.Sprintf("data_%d.output.csv", timeNowMs)
+		outfilePath = &outfilePathVal
+	} else {
+		ext := filepath.Ext(*path)
+		if ext != ".csv" {
+			return nil, oops.Errorf("output file must be a CSV file: %s", *path)
+		}
+		outfilePath = path
+	}
+
+	// Create the output file.
+	file, err := os.Create(*outfilePath)
+	if err != nil {
+		return nil, oops.Wrapf(err, "unable to create output file for path: %s", *outfilePath)
+	}
+	defer file.Close()
+
+	// Create a CSV writer, and write the data to the output file.
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	for _, value := range data {
+		err := writer.Write(value)
+		if err != nil {
+			return nil, oops.Wrapf(err, "unable to write value: %+v to file: %s", value, file.Name())
+		}
+	}
+
+	return file, nil
 }
